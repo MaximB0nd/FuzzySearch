@@ -27,17 +27,6 @@ public extension Array where Element: FuzzySearchable {
             }
         }
         
-        guard !results.isEmpty else {
-            for element in self {
-                if element.searchableName.contains(input){
-                    results.append((element, 0))
-                }
-            }
-            
-            print("No res in fuzzySearch")
-            return results.sorted { $0.0.searchableName.range(of: input)!.lowerBound < $1.0.searchableName.range(of: input)!.lowerBound }.map(\.0)
-        }
-        
         print("Exist res in fuzzySearch")
         results.sort { $0.1 < $1.1 }
         return results.map { $0.0 }
