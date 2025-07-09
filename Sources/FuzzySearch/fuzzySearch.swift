@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Array where Element: FuzzySearchable {
-    func fuzzySearch(input: Element, maxWeightDistance: Double = 0.5) -> [Element] {
+    func fuzzySearch(input: FuzzySearchable, maxWeightDistance: Double = 0.5) -> [Element] {
         
         guard !input.searchableName.isEmpty else { return [] }
         
