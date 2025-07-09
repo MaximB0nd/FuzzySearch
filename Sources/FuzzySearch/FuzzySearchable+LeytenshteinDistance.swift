@@ -9,8 +9,8 @@ import Foundation
 
 public extension FuzzySearchable {
     func levenshteinDistance(to other: String) -> Int {
-        let s = self.searchableName
-        let t = other
+        let s = self.searchableName.lowercased()
+        let t = other.lowercased()
         
         if s.isEmpty { return t.count }
         if t.isEmpty { return s.count }
