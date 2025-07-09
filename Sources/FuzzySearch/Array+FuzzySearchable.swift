@@ -30,7 +30,7 @@ public extension Array where Element: FuzzySearchable {
             }
         }
         
-        
+        if results.contains(where: {$0.0.searchableName == input}) { return results.filter { $0.0.searchableName == input }.map { $0.0 }}
         results.sort { $0.1 < $1.1 }
         return results.map { $0.0 }
     }
@@ -38,10 +38,8 @@ public extension Array where Element: FuzzySearchable {
 
 fileprivate extension String {
     func containsCount(of other: String, caseSensitive: Bool = true) -> Int {
-        // Обрабатываем случай пустой строки
         guard !other.isEmpty else { return 0 }
-        
-        // Создаем частотный словарь для символов другой строки
+    
         var charCounts: [Character: Int] = [:]
         for char in other {
             let key = caseSensitive ? char : Character(char.lowercased())
@@ -49,12 +47,10 @@ fileprivate extension String {
         }
         
         var matchCount = 0
-        
-        // Проверяем каждый символ текущей строки
+
         for char in self {
             let key = caseSensitive ? char : Character(char.lowercased())
-            
-            // Если символ есть в словаре и его счётчик > 0
+
             if let count = charCounts[key], count > 0 {
                 matchCount += 1
                 charCounts[key] = count - 1
