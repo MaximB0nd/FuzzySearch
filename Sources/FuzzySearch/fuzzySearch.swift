@@ -8,14 +8,14 @@
 import Foundation
 
 public extension Array where Element: FuzzySearchable {
-    func fuzzySearch(input: FuzzySearchable, maxWeightDistance: Double = 0.5) -> [Element] {
+    func fuzzySearch(input: String, maxWeightDistance: Double = 0.5) -> [Element] {
         
         guard !input.searchableName.isEmpty else { return [] }
         
         var distances: [(Element, Double)] = []
         
         for i in 0..<self.count {
-            let distance = input.LeytenshteinDistancePerLen(to: self[i].searchableName)
+            let distance = input.LeytenshteinDistancePerLen(from: self[i].searchableName)
             distances.append((self[i], distance))
         }
         
