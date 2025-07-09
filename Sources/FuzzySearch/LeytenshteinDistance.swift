@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension FuzzySearchable {
+public extension FuzzySearchable {
     
     func LeytenshteinDistancePerLen(to t: String) -> Double {
         let sLength = searchableName.count
