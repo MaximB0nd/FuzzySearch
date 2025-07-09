@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Array where Element: FuzzySearchable {
-    func fuzzySearch(input: String, maxWeightDistance: Int = 5) -> [Element] {
+    func fuzzySearch(input: String, maxWeightDistance: Int = 5, minContains: Int = 2) -> [Element] {
         guard !input.isEmpty else { return [] }
         
         var results: [(Element, Int)] = []
@@ -20,7 +20,7 @@ public extension Array where Element: FuzzySearchable {
             }
             
             let distance = input.levenshteinDistance(to: target)
-            if distance <= maxWeightDistance && element.searchableName.containsCount(of: input) > 2 {
+            if distance <= maxWeightDistance && element.searchableName.containsCount(of: input) > minContains {
                 print(element.searchableName, distance)
                 if element.searchableName.contains(input) {
                     results.append((element, distance/2))
