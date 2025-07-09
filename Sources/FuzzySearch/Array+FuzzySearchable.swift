@@ -20,7 +20,7 @@ public extension Array where Element: FuzzySearchable {
             }
             
             let distance = input.levenshteinDistance(to: target)
-            if distance <= maxWeightDistance && element.contains(input) {
+            if distance <= maxWeightDistance && element.searchableName.contains(input){
                 results.append((element, distance))
             }
         }
