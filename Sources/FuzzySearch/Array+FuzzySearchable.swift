@@ -22,12 +22,12 @@ public extension Array where Element: FuzzySearchable {
                 
                 let distance = input.levenshteinDistance(to: target)
                 if distance <= maxWeightDistance && distance != element.searchableName.count {
+                    print(element.searchableName, distance)
                     results.append((element, distance))
                 }
             }
         }
         
-        print("Exist res in fuzzySearch")
         results.sort { $0.1 < $1.1 }
         return results.map { $0.0 }
     }
