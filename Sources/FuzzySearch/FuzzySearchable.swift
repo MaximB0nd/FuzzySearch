@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol FuzzySearchable {
+public protocol FuzzySearchable: StringProtocol {
     var searchableName: String { get }
 }

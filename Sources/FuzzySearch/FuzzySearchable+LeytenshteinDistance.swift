@@ -26,10 +26,10 @@ public extension FuzzySearchable {
             
             for j in 1...tChars.count {
                 let cost = sChars[i-1] == tChars[j-1] ? 0 : 1
-                curr[j] = min(
-                    prev[j] + 1,
-                    curr[j-1] + 1,
-                    prev[j-1] + cost
+                curr[j] = Swift.min(
+                    Int(prev[j] + 1),
+                    Int(curr[j-1] + 1),
+                    Int(prev[j-1] + cost)
                 )
             }
             
