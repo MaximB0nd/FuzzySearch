@@ -8,27 +8,35 @@
 import Foundation
 
 public extension FuzzySearchable {
-    
-    func LeytenshteinDistancePerLen(from t: String) -> Int {
-        let sLength = searchableName.count
-        let tLength = t.count
+    func levenshteinDistance(to other: String) -> Int {
+        let s = self.searchableName
+        let t = other
         
-        var array = Array(repeating: Array(repeating: 0, count: tLength + 1), count: sLength + 1)
+        if s.isEmpty { return t.count }
+        if t.isEmpty { return s.count }
         
-        for i in 0..<sLength + 1 {
-            array[i][0] = i
-        }
+        var prev = Array(0...t.count)
+        var curr = Array(repeating: 0, count: t.count + 1)
         
-        for j in 0..<tLength + 1 {
-            array[0][j] = j
-        }
+        let sChars = Array(s)
+        let tChars = Array(t)
         
-        for i in 1..<sLength + 1 {
-            for j in 1..<tLength + 1 {
-                array[i][j] = min(array[i - 1][j] + 1, array[i][j - 1] + 1, array[i - 1][j - 1] + 1)
+        for i in 1...sChars.count {
+            curr[0] = i
+            
+            for j in 1...tChars.count {
+                let cost = sChars[i-1] == tChars[j-1] ? 0 : 1
+                curr[j] = min(
+                    prev[j] + 1,
+                    curr[j-1] + 1,
+                    prev[j-1] + cost
+                )
             }
+            
+            prev = curr
+            curr = Array(repeating: 0, count: t.count + 1)
         }
         
-        return array[sLength][tLength]
+        return prev[t.count]
     }
 }

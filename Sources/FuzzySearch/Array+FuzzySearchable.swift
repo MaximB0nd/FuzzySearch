@@ -9,17 +9,23 @@ import Foundation
 
 public extension Array where Element: FuzzySearchable {
     func fuzzySearch(input: String, maxWeightDistance: Int = 5) -> [Element] {
+        guard !input.isEmpty else { return [] }
         
-        guard !input.searchableName.isEmpty else { return [] }
+        var results: [(Element, Int)] = []
         
-        var distances: [(Element, Int)] = []
-        
-        for i in 0..<self.count {
-            let distance = input.LeytenshteinDistancePerLen(from: self[i].searchableName)
-            distances.append((self[i], distance))
+        for element in self {
+            let target = element.searchableName
+            if abs(input.count - target.count) > maxWeightDistance {
+                continue
+            }
+            
+            let distance = input.levenshteinDistance(to: target)
+            if distance <= maxWeightDistance {
+                results.append((element, distance))
+            }
         }
         
-        distances.sort { $0.1 < $1.1 }
-        return distances.filter { $0.1 <= maxWeightDistance } .map { $0.0 }
+        results.sort { $0.1 < $1.1 }
+        return results.map { $0.0 }
     }
 }
