@@ -20,7 +20,7 @@ public extension Array where Element: FuzzySearchable {
             }
             
             let distance = input.levenshteinDistance(to: target)
-            if distance <= maxWeightDistance {
+            if distance <= maxWeightDistance && element.searchableName.containsCount(of: input) > 2 {
                 print(element.searchableName, distance)
                 if element.searchableName.contains(input) {
                     results.append((element, distance/2))
@@ -37,16 +37,30 @@ public extension Array where Element: FuzzySearchable {
 }
 
 fileprivate extension String {
-    func contains(_ string: String) -> Int {
-        var count = 0
+    func containsCount(of other: String, caseSensitive: Bool = true) -> Int {
+        // Обрабатываем случай пустой строки
+        guard !other.isEmpty else { return 0 }
         
-        for i in stride(from: 0, to: count - string.count + 1, by: 1) {
-            let substring = String(self[index(startIndex, offsetBy: i)..<index(startIndex, offsetBy: i + string.count)])
-            if substring == string {
-                count += 1
+        // Создаем частотный словарь для символов другой строки
+        var charCounts: [Character: Int] = [:]
+        for char in other {
+            let key = caseSensitive ? char : Character(char.lowercased())
+            charCounts[key, default: 0] += 1
+        }
+        
+        var matchCount = 0
+        
+        // Проверяем каждый символ текущей строки
+        for char in self {
+            let key = caseSensitive ? char : Character(char.lowercased())
+            
+            // Если символ есть в словаре и его счётчик > 0
+            if let count = charCounts[key], count > 0 {
+                matchCount += 1
+                charCounts[key] = count - 1
             }
         }
         
-        return count
+        return matchCount
     }
 }
