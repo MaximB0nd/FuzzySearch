@@ -35,3 +35,18 @@ public extension Array where Element: FuzzySearchable {
         return results.map { $0.0 }
     }
 }
+
+fileprivate extension String {
+    func contains(_ string: String) -> Int {
+        var count = 0
+        
+        for i in stride(from: 0, to: count - string.count + 1, by: 1) {
+            let substring = String(self[index(startIndex, offsetBy: i)..<index(startIndex, offsetBy: i + string.count)])
+            if substring == string {
+                count += 1
+            }
+        }
+        
+        return count
+    }
+}
