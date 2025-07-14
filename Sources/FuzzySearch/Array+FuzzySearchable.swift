@@ -10,7 +10,7 @@ import Foundation
 public extension Array where Element: FuzzySearchable {
     func fuzzySearch(input: String) -> [Element] {
         
-        let top = 1
+        let top = 3
         
         var input = input.lowercased()
         input.removeAll { $0 == " " }
@@ -39,7 +39,7 @@ public extension Array where Element: FuzzySearchable {
         
         let distances = results.map(\.1)
         
-        let maxes = getMax(array: distances, k: top)
+        let maxes = getMin(array: distances, k: top)
         
         results = results.filter({maxes.contains($0.1)})
         results.sort { $0.1 < $1.1 }
@@ -47,7 +47,7 @@ public extension Array where Element: FuzzySearchable {
     }
 }
 
-func getMax(array: [Int], k: Int) -> [Int] {
+func getMin(array: [Int], k: Int) -> [Int] {
     
     guard k > 0 else {
         return []
@@ -57,7 +57,7 @@ func getMax(array: [Int], k: Int) -> [Int] {
     var result = [Int]()
     
     for _ in 0..<k{
-        let max = array.max() ?? 0
+        let max = array.min() ?? 0
         array.removeAll(where: {$0 == max})
         result.append(max)
     }
