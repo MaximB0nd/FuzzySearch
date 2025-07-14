@@ -27,12 +27,11 @@ public extension Array where Element: FuzzySearchable {
                 element.searchableName.contains(input) {
                 results.append( (element, 0) )
             } else {
-                if distance < element.searchableName.count - 2 {
+                if distance < element.searchableName.count - 1 {
+                    print(element.searchableName, distance)
                     results.append( (element, distance) )
                 }
             }
-            
-            print(element.searchableName, distance)
         }
         
         if results.contains(where: { $0.0.searchableName == input} ) {
