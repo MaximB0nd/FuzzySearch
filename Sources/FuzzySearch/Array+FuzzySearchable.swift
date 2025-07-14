@@ -23,8 +23,7 @@ public extension Array where Element: FuzzySearchable {
                 
             let distance = element.levenshteinDistance(to: input)
             
-            if input.count > 1 &&
-                element.searchableName.lowercased().contains(input) {
+            if element.searchableName.lowercased().contains(input) {
                 results.append( (element, 0) )
             } else {
                 if distance < element.searchableName.count - 1 {
