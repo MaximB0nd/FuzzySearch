@@ -20,16 +20,15 @@ public extension Array where Element: FuzzySearchable {
         var results: [(Element, Int)] = []
         
         for element in self {
-            let target = element.searchableName
+                
+            let distance = element.levenshteinDistance(to: input)
             
-            let distance = element.levenshteinDistance(to: target)
-            
-//            if element.searchableName.count > 1 &&
-//                element.searchableName.contains(target) {
-//                results.append( (element, 1) )
-//            } else {
+            if element.searchableName.count > 1 &&
+                element.searchableName.contains(input) {
+                results.append( (element, 1) )
+            } else {
                 results.append( (element, distance) )
-//            }
+            }
             
             print(element, distance)
         }
