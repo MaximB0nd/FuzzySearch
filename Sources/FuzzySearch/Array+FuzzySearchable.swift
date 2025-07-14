@@ -10,7 +10,7 @@ import Foundation
 public extension Array where Element: FuzzySearchable {
     func fuzzySearch(input: String) -> [Element] {
         
-        let top = 3
+        let top = 1
         
         var input = input.lowercased()
         input.removeAll { $0 == " " }
