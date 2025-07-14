@@ -10,9 +10,10 @@ import Foundation
 public extension Array where Element: FuzzySearchable {
     func fuzzySearch(input: String) -> [Element] {
         
-        let top = 2
+        let top = 1
         
-        let maxWeightDistance: Int = 6, minContains: Int = 1
+        var input = input.lowercased()
+        input.removeAll { $0 == " " }
         
         guard !input.isEmpty else { return [] }
         
