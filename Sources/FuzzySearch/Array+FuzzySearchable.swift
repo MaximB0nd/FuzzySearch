@@ -30,7 +30,7 @@ public extension Array where Element: FuzzySearchable {
                 results.append( (element, distance) )
             }
             
-            print(element, distance)
+            print(element.searchableName, distance)
         }
         
         if results.contains(where: { $0.0.searchableName == input} ) {
