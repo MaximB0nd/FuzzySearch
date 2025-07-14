@@ -10,6 +10,8 @@ import Foundation
 public extension Array where Element: FuzzySearchable {
     func fuzzySearch(input: String) -> [Element] {
         
+        let top = 3
+        
         let maxWeightDistance: Int = 6, minContains: Int = 1
         
         guard !input.isEmpty else { return [] }
@@ -18,47 +20,46 @@ public extension Array where Element: FuzzySearchable {
         
         for element in self {
             let target = element.searchableName
-            if abs(input.count - target.count) > maxWeightDistance {
-                continue
+            
+            let distance = element.levenshteinDistance(to: target)
+            
+            if element.searchableName.count > 1 &&
+                element.searchableName.contains(target) {
+                results.append( (element, 1) )
+            } else {
+                results.append( (element, distance) )
             }
             
-            let distance = input.levenshteinDistance(to: target)
-            if distance <= maxWeightDistance && element.searchableName.containsCount(of: input) > minContains {
-                if element.searchableName.contains(input) {
-                    results.append((element, distance/2))
-                } else {
-                    results.append((element, distance))
-                }
-            }
         }
         
-        if results.contains(where: {$0.0.searchableName == input}) { return results.filter { $0.0.searchableName == input }.map { $0.0 }}
+        if results.contains(where: {$0.0.searchableName == input}) {
+            return results.filter { $0.0.searchableName == input }.map { $0.0 }
+        }
+        
+        let distances = results.map(\.1)
+        
+        let maxes = getMax(array: distances, k: top)
+        
+        results = results.filter({maxes.contains($0.1)})
         results.sort { $0.1 < $1.1 }
         return results.map { $0.0 }
     }
 }
 
-fileprivate extension String {
-    func containsCount(of other: String, caseSensitive: Bool = true) -> Int {
-        guard !other.isEmpty else { return 0 }
+func getMax(array: [Int], k: Int) -> [Int] {
     
-        var charCounts: [Character: Int] = [:]
-        for char in other {
-            let key = caseSensitive ? char : Character(char.lowercased())
-            charCounts[key, default: 0] += 1
-        }
-        
-        var matchCount = 0
-
-        for char in self {
-            let key = caseSensitive ? char : Character(char.lowercased())
-
-            if let count = charCounts[key], count > 0 {
-                matchCount += 1
-                charCounts[key] = count - 1
-            }
-        }
-        
-        return matchCount
+    guard k > 0 else {
+        return []
     }
+    
+    var array = array
+    var result = [Int]()
+    
+    for _ in 0..<k{
+        let max = array.max() ?? 0
+        array.removeAll(where: {$0 == max})
+        result.append(max)
+    }
+    
+    return result
 }
